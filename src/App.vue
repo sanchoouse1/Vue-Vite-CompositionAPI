@@ -66,18 +66,17 @@ export default defineComponent({
       }
     }
 
-    const toggleCompleted = (index: number, taskId: string) => {
+    const toggleCompleted = async (index: number, taskId: string) => {
       const task = tasks.value[index];
       task.completed = !task.completed;
-      axios.put(`/api/toggle/${task.id}`, { completed: task.completed })
-        .then(response => {
-          console.log('Task updated successfully!');
-        })
-        .catch(error => {
-          console.log('Произошла ошибка обновления задач на сервере:', error);
+      try {
+        const response = await axios.put(`/api/toggle/${task.id}`, { completed: task.completed });
+        console.log('Task updated successfully!');
+      } catch (error) {
+        console.log('Произошла ошибка обновления задач на сервере:', error);
           // отменяю изменение, если завершилось неудачей
           task.completed = !task.completed;
-        });
+      }
     }
 
     const editTaskDescription = async (index: number, taskId: string) => {
